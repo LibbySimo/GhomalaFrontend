@@ -8,27 +8,30 @@ const UploadSection = ({ onDocumentUploaded }) => {
   const [contextSensitivity, setContextSensitivity] = useState(3);
   const [notification, setNotification] = useState(null);
 
-  const handleUploadSuccess = (data) => {
-    // Show success notification
-    setNotification({
-      type: 'success',
-      title: 'Document Uploaded',
-      message: 'Your document has been successfully uploaded and processed.',
-      autoClose: true
+ // In UploadSection.jsx, update the handleUploadSuccess function:
+
+const handleUploadSuccess = (data, file) => {
+  // Show success notification
+  setNotification({
+    type: 'success',
+    title: 'Document Uploaded',
+    message: 'Your document has been successfully uploaded and processed.',
+    autoClose: true
+  });
+  
+  // Notify parent component about the new document
+  if (onDocumentUploaded) {
+    onDocumentUploaded({
+      id: data.document_id,
+      name: file.name,
+      date: new Date().toLocaleDateString(),
+      size: formatFileSize(file.size),
+      status: 'ready',
+      textPreview: data.extracted_text,
+      filePath: data.file_path  // Make sure this matches what the backend returns
     });
-    
-    // Notify parent component about the new document
-    if (onDocumentUploaded) {
-      onDocumentUploaded({
-        id: data.document_id,
-        name: fileInputRef.current.files[0].name,
-        date: new Date().toLocaleDateString(),
-        size: formatFileSize(fileInputRef.current.files[0].size),
-        status: 'ready',
-        textPreview: data.extracted_text
-      });
-    }
-  };
+  }
+};
   
   const handleUploadError = (errorMessage) => {
     setNotification({

@@ -1,61 +1,47 @@
 import React, { useState } from 'react';
 import Dropdown from '../common/Dropdown';
 
-const QuestionInput = ({ onAskQuestion }) => {
+const QuestionInput = ({ 
+  onAskQuestion, 
+  isLoading,
+  documents = [],
+  selectedDocumentId,
+  setSelectedDocumentId
+}) => {
   const [question, setQuestion] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   
   const languageOptions = [
     { id: 'en', label: 'English', selected: true },
+    { id: 'fr', label: 'French', selected: false },
     { id: 'gh', label: 'Ghomala', selected: false }
   ];
 
+  // Generate document options dynamically from props
   const documentOptions = [
-    { id: 'all', label: 'All Documents', selected: true },
-    { id: 'doc1', label: 'Traditional Ghomala Marriage Customs', selected: false },
-    { id: 'doc2', label: 'Ghomala Folklore Collection Vol. 1', selected: false }
+    { id: 'all', label: 'All Documents', selected: selectedDocumentId === 'all' },
+    ...documents.map(doc => ({
+      id: doc.id,
+      label: doc.name,
+      selected: selectedDocumentId === doc.id,
+      disabled: doc.status !== 'ready'
+    }))
   ];
 
   const handleSubmit = () => {
     if (question.trim() === '') return;
-    
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      onAskQuestion(question);
-      setQuestion('');
-      setIsLoading(false);
-      
-      // Show success notification
-      const notification = document.createElement('div');
-      notification.className = 'fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 flex items-start max-w-sm border border-gray-200 z-50';
-      notification.innerHTML = `
-        <div class="w-8 h-8 flex items-center justify-center bg-green-100 text-green-600 rounded-full mr-3">
-          <i class="ri-check-line"></i>
-        </div>
-        <div class="flex-1">
-          <h4 class="text-sm font-medium text-gray-900">Question Answered</h4>
-          <p class="text-xs text-gray-500 mt-1">Your question has been processed successfully.</p>
-        </div>
-        <button class="ml-3 text-gray-400 hover:text-gray-600">
-          <div class="w-5 h-5 flex items-center justify-center">
-            <i class="ri-close-line"></i>
-          </div>
-        </button>
-      `;
-      document.body.appendChild(notification);
-      
-      notification.querySelector('button').addEventListener('click', () => {
-        document.body.removeChild(notification);
-      });
-      
-      setTimeout(() => {
-        if (document.body.contains(notification)) {
-          document.body.removeChild(notification);
-        }
-      }, 3000);
-    }, 2000);
+    onAskQuestion(question.trim());
+    setQuestion('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleDocumentSelect = (docId) => {
+    setSelectedDocumentId(docId);
   };
 
   return (
@@ -69,6 +55,7 @@ const QuestionInput = ({ onAskQuestion }) => {
               id="languageSelector"
               icon="ri-translate-2-line"
               options={languageOptions}
+              onSelect={(id) => console.log("Selected language:", id)}
             />
           </div>
           <div className="flex items-center">
@@ -78,6 +65,7 @@ const QuestionInput = ({ onAskQuestion }) => {
               icon="ri-file-list-line"
               options={documentOptions}
               width="w-64"
+              onSelect={handleDocumentSelect}
             />
           </div>
         </div>
@@ -90,17 +78,19 @@ const QuestionInput = ({ onAskQuestion }) => {
           placeholder="Type your question about Ghomala historical documents..."
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={isLoading}
           maxLength={500}
         ></textarea>
         <div className="absolute bottom-3 right-3 flex items-center space-x-3">
-          <span className={`text-xs ${question.length > 500 ? 'text-red-500' : 'text-gray-500'}`}>
+          <span className={`text-xs ${question.length > 450 ? (question.length > 500 ? 'text-red-500' : 'text-amber-500') : 'text-gray-500'}`}>
             {question.length}/500
           </span>
           <button 
             id="askButton"
-            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium flex items-center whitespace-nowrap"
+            className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium flex items-center whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
             onClick={handleSubmit}
-            disabled={isLoading}
+            disabled={isLoading || question.trim() === '' || documents.length === 0}
           >
             <div className="w-5 h-5 flex items-center justify-center mr-2">
               {isLoading ? (
@@ -120,7 +110,11 @@ const QuestionInput = ({ onAskQuestion }) => {
         <div className="w-4 h-4 flex items-center justify-center mr-1">
           <i className="ri-information-line"></i>
         </div>
-        For best results, ask specific questions about Ghomala historical customs, traditions, or laws
+        {documents.length === 0 ? (
+          <span className="text-amber-500">Please upload at least one document before asking questions</span>
+        ) : (
+          <span>For best results, ask specific questions about Ghomala historical customs, traditions, or laws</span>
+        )}
       </div>
     </div>
   );

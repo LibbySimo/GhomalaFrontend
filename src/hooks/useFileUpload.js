@@ -5,6 +5,7 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentFile, setCurrentFile] = useState(null);
   
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -20,7 +21,15 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
     setIsDragActive(false);
     
     if (e.dataTransfer.files.length) {
-      uploadFile(e.dataTransfer.files[0]);
+      const droppedFile = e.dataTransfer.files[0];
+      
+      // This sets the file in the input element for consistency
+      // Create a DataTransfer object to set the file input's files
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(droppedFile);
+      fileInputRef.current.files = dataTransfer.files;
+      
+      uploadFile(droppedFile);
     }
   };
 
@@ -37,6 +46,9 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
       return;
     }
     
+    // Store the current file for later reference
+    setCurrentFile(file);
+    
     setIsUploading(true);
     setUploadProgress(0);
     
@@ -45,8 +57,10 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
     formData.append('file', file);
     
     try {
+      console.log(5555555555555);
+      
       // Make the API request
-      const response = await axios.post(' http://127.0.0.1:5000/api/upload', formData, {
+      const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -63,7 +77,8 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
         setUploadProgress(100);
         setTimeout(() => {
           setIsUploading(false);
-          onUploadSuccess(response.data);
+          // Pass both the API response data AND the file reference
+          onUploadSuccess(response.data, file);
         }, 1000);
       }
     } catch (error) {
@@ -81,6 +96,7 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
     handleFileChange,
     isDragActive,
     isUploading,
-    uploadProgress
+    uploadProgress,
+    currentFile
   };
 };

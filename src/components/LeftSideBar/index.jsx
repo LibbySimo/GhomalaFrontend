@@ -3,7 +3,7 @@ import UploadSection from './UploadSection';
 import DocumentList from './DocumentList';
 
 const LeftSidebar = ({ documents, setDocuments }) => {
-     const [documents, setDocuments] = useState([]);
+     
 
   const handleDocumentUploaded = (newDocument) => {
     // Add the new document to the list
