@@ -60,7 +60,7 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
       console.log(5555555555555);
       
       // Make the API request
-      const response = await axios.post('https://ghomalabackendv2.onrender.com/api/upload', formData, {
+      const response = await axios.post('https://ghomalabackendv2-production.up.railway.app/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
