@@ -60,7 +60,7 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
       console.log(5555555555555);
       
       // Make the API request
-      const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
+      const response = await axios.post('https://ghomalabackendv2.onrender.com/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -78,6 +78,7 @@ export const useFileUpload = (fileInputRef, onUploadSuccess, onUploadError) => {
         setTimeout(() => {
           setIsUploading(false);
           // Pass both the API response data AND the file reference
+          
           onUploadSuccess(response.data, file);
         }, 1000);
       }
