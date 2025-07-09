@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const API_URL =  'https://ghomalabackendv2-production.up.railway.app/api';
+const API_URL =  'https://ghomalaapi.onrender.com/api';
 
 export const useDocumentQuery = () => {
   const [isLoading, setIsLoading] = useState(false);
