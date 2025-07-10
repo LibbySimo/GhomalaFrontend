@@ -108,7 +108,7 @@ const handleUploadSuccess = (data, file) => {
         />
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700">Processing Settings</span>
           <label className="switch">
@@ -138,7 +138,7 @@ const handleUploadSuccess = (data, file) => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {notification && (
         <Notification 
