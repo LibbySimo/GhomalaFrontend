@@ -50,24 +50,7 @@ const AnswerCard = ({ conversation }) => {
               </div>
             </div>
             <div className="flex space-x-2">
-              <button className="text-gray-500 hover:text-primary flex items-center text-xs">
-                <div className="w-4 h-4 flex items-center justify-center mr-1">
-                  <i className="ri-thumb-up-line"></i>
-                </div>
-                Helpful
-              </button>
-              <button className="text-gray-500 hover:text-primary flex items-center text-xs">
-                <div className="w-4 h-4 flex items-center justify-center mr-1">
-                  <i className="ri-clipboard-line"></i>
-                </div>
-                Copy
-              </button>
-              <button className="text-gray-500 hover:text-primary flex items-center text-xs">
-                <div className="w-4 h-4 flex items-center justify-center mr-1">
-                  <i className="ri-share-line"></i>
-                </div>
-                Share
-              </button>
+
             </div>
           </div>
         </div>
