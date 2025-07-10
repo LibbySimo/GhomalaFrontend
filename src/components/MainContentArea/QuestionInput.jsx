@@ -49,15 +49,7 @@ const QuestionInput = ({
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-gray-900">Ask a Question</h2>
         <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="text-sm text-gray-500 mr-2">Language:</span>
-            <Dropdown 
-              id="languageSelector"
-              icon="ri-translate-2-line"
-              options={languageOptions}
-              onSelect={(id) => console.log("Selected language:", id)}
-            />
-          </div>
+    
           <div className="flex items-center">
             <span className="text-sm text-gray-500 mr-2">Document:</span>
             <Dropdown 
